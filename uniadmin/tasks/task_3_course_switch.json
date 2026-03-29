@@ -1,0 +1,58 @@
+{
+  "task_id": "task_3_course_switch",
+  "title": "Course Switch Under Deadline",
+  "difficulty": "medium",
+  "max_steps": 20,
+  "deadline_step": 16,
+  "description": "A student wants to switch from Course A to Course B. The add/drop deadline is at step 16.",
+  "rubric": {
+    "checked_prerequisites": {
+      "points": 0.10,
+      "description": "Checked prerequisites for target course"
+    },
+    "checked_seat_availability": {
+      "points": 0.10,
+      "description": "Checked seat availability for target course"
+    },
+    "checked_credit_limits": {
+      "points": 0.10,
+      "description": "Checked credit limits post-switch"
+    },
+    "checked_fee_differential": {
+      "points": 0.10,
+      "description": "Checked fee status / differential"
+    },
+    "checked_scholarship_compliance": {
+      "points": 0.10,
+      "description": "Checked scholarship compliance after dropping"
+    },
+    "checked_academic_probation": {
+      "points": 0.05,
+      "description": "Checked academic probation status"
+    },
+    "dropped_original": {
+      "points": 0.15,
+      "description": "Successfully dropped original course"
+    },
+    "enrolled_target": {
+      "points": 0.15,
+      "description": "Successfully enrolled in target course"
+    },
+    "completed_before_deadline": {
+      "points": 0.10,
+      "description": "Completed all mutations before step 16"
+    },
+    "called_submit": {
+      "points": 0.05,
+      "description": "Called submit_final_response"
+    }
+  },
+  "penalties": {
+    "state_corruption": -0.30,
+    "redundant_tool_call": -0.10
+  },
+  "entity_refs": {
+    "student_id": "STU-088",
+    "scholarship_id": "SCH-001"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "task_id": "task_6_bulk_schedule",
+  "title": "Bulk Exam Schedule Conflict Resolution",
+  "difficulty": "hard",
+  "max_steps": 50,
+  "deadline_step": null,
+  "rubric": {
+    "identified_all_conflicts": {"points": 0.15},
+    "checked_room_availability": {"points": 0.10},
+    "checked_faculty_availability": {"points": 0.10},
+    "verified_no_same_day": {"points": 0.10},
+    "resolved_2_plus": {"points": 0.10},
+    "resolved_4_plus": {"points": 0.10},
+    "resolved_6_plus": {"points": 0.10},
+    "resolved_all_8": {"points": 0.10},
+    "no_unresolved_clashes": {"points": 0.05},
+    "called_submit": {"points": 0.10}
+  },
+  "penalties": {
+    "new_conflict_created": -0.15
+  }
+}

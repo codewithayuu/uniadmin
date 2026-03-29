@@ -1,0 +1,42 @@
+{
+  "task_id": "task_1_course_inquiry",
+  "title": "Course Information Inquiry",
+  "difficulty": "easy",
+  "max_steps": 15,
+  "deadline_step": null,
+  "description": "A student asks about available elective courses in Computer Science for next semester that don't conflict with their current schedule and fit within their credit limit.",
+  "rubric": {
+    "retrieved_student_enrollment": {
+      "points": 0.15,
+      "description": "Retrieved student's current enrollment using get_enrollment_history or get_student_record"
+    },
+    "searched_cs_electives": {
+      "points": 0.15,
+      "description": "Searched CS electives for the correct semester using search_courses"
+    },
+    "checked_schedule_conflicts": {
+      "points": 0.20,
+      "description": "Checked schedule conflicts between current courses and candidate electives"
+    },
+    "checked_credit_limit": {
+      "points": 0.15,
+      "description": "Checked credit limit compliance using check_credit_limits"
+    },
+    "provided_accurate_list": {
+      "points": 0.20,
+      "description": "Provided accurate, complete course list in final response"
+    },
+    "called_submit": {
+      "points": 0.15,
+      "description": "Called submit_final_response with correct information"
+    }
+  },
+  "penalties": {
+    "course_with_unmet_prereqs": -0.10,
+    "course_with_schedule_conflict": -0.10
+  },
+  "entity_refs": {
+    "student_id": "STU-171",
+    "target_semester": 6
+  }
+}

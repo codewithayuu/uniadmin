@@ -1,0 +1,22 @@
+{
+  "task_id": "task_4_concurrent_conflict",
+  "title": "Concurrent Enrollment Conflict",
+  "difficulty": "medium",
+  "max_steps": 25,
+  "deadline_step": null,
+  "rubric": {
+    "identified_seat_availability": {"points": 0.10},
+    "checked_student_x_eligibility": {"points": 0.10},
+    "checked_student_y_eligibility": {"points": 0.10},
+    "discovered_scholarship_dependency": {"points": 0.15},
+    "correctly_prioritized_x": {"points": 0.15},
+    "enrolled_student_x": {"points": 0.10},
+    "denied_student_y": {"points": 0.10},
+    "suggested_alternatives": {"points": 0.10},
+    "called_submit": {"points": 0.10}
+  },
+  "penalties": {
+    "enrolled_both": -0.40,
+    "enrolled_y_over_x": -0.30
+  }
+}

@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pdb
+*.egg-info/
+dist/
+build/
+pip-wheel-metadata/
+
+# Virtual environments
+.env
+.env.*
+.venv/
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.sublime/
+*.code-workspace
+
+# Outputs (keep structure, ignore content)
+outputs/logs/*
+outputs/evals/*
+!outputs/logs/.gitkeep
+!outputs/evals/.gitkeep
+
+# Caches
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.hypothesis/
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini

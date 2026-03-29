@@ -1,0 +1,50 @@
+{
+  "enrollment_policies": {
+    "max_credits_per_semester": 21,
+    "elevated_credit_limit_graduating": 24,
+    "prerequisite_enforcement": true,
+    "prerequisite_waiver_min_grade": "B",
+    "fee_clearance_required": true,
+    "min_cgpa_for_registration": 4.0,
+    "duplicate_enrollment_blocked": true,
+    "capacity_strictly_enforced": true
+  },
+  "hostel_policies": {
+    "gender_restriction_enforced": true,
+    "max_room_capacity": 2,
+    "fee_clearance_for_allocation": true,
+    "checkout_deadline_graduating": "2025-04-30",
+    "transfer_requires_fee_clearance": true
+  },
+  "fee_policies": {
+    "partial_payments_accepted": true,
+    "outstanding_fees_block_enrollment": true,
+    "outstanding_fees_block_hostel": true,
+    "late_payment_surcharge": 500,
+    "deferral_requires_scholarship_50pct": true
+  },
+  "scholarship_policies": {
+    "min_credit_maintenance_required": true,
+    "course_dependency_priority_over_cgpa": true,
+    "non_compliance_triggers_review": true
+  },
+  "exam_policies": {
+    "no_same_day_exams_per_student": true,
+    "no_double_booking_rooms": true,
+    "faculty_single_slot_invigilation": true,
+    "department_resolves_conflicts": true
+  },
+  "academic_policies": {
+    "graduation_min_credits": 160,
+    "probation_credit_limit": 15,
+    "probation_clearance_cgpa": 6.0,
+    "probation_clearance_consecutive_semesters": 2,
+    "withdrawal_grade": "W"
+  },
+  "exception_rules": {
+    "credit_overload": "Approved ONLY IF final semester AND ≤3 credits short of 160",
+    "prerequisite_waiver": "Approved ONLY IF equivalent course completed with grade ≥ B",
+    "fee_deferral": "Approved ONLY IF active scholarship covers ≥50% of fees",
+    "all_others": "DENIED by default"
+  }
+}

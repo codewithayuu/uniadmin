@@ -1,0 +1,33 @@
+name: uniadmin
+version: "1.0.0"
+description: "University administrative operations environment for agentic RL — simulates a university admin desk processing student requests across ~1,800 interconnected entities with 26 tools and 6 graded tasks."
+author: "UniAdmin Team"
+tags:
+  - openenv
+  - rl
+  - education
+  - admin
+  - multi-step
+  - agentic
+action_type: "uniadmin.models.UniAdminAction"
+observation_type: "uniadmin.models.UniAdminObservation"
+environment_class: "uniadmin.server.uniadmin_environment.UniAdminEnvironment"
+tasks:
+  - id: "task_1_course_inquiry"
+    difficulty: "easy"
+    description: "Course information inquiry with schedule conflict checking"
+  - id: "task_2_hostel_allocation"
+    difficulty: "easy"
+    description: "Hostel room allocation with fee and gender verification"
+  - id: "task_3_course_switch"
+    difficulty: "medium"
+    description: "Course switch under add/drop deadline pressure"
+  - id: "task_4_concurrent_conflict"
+    difficulty: "medium"
+    description: "Concurrent enrollment conflict with policy-based priority"
+  - id: "task_5_graduation_crisis"
+    difficulty: "hard"
+    description: "Graduation eligibility with 6 hidden blockers and dynamic regulation"
+  - id: "task_6_bulk_schedule"
+    difficulty: "hard"
+    description: "Bulk exam schedule conflict resolution (constraint satisfaction)"

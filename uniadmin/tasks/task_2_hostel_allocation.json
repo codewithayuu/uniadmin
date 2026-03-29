@@ -1,0 +1,46 @@
+{
+  "task_id": "task_2_hostel_allocation",
+  "title": "Hostel Room Allocation",
+  "difficulty": "easy",
+  "max_steps": 15,
+  "deadline_step": null,
+  "description": "A new student requests hostel allocation. Agent must find a suitable room matching gender restriction, check availability, verify fee clearance, and process the allocation.",
+  "rubric": {
+    "retrieved_student_record": {
+      "points": 0.10,
+      "description": "Retrieved student record using get_student_record"
+    },
+    "checked_gender_blocks": {
+      "points": 0.15,
+      "description": "Checked gender-appropriate hostel blocks"
+    },
+    "checked_room_availability": {
+      "points": 0.15,
+      "description": "Checked room availability using get_hostel_details or search"
+    },
+    "checked_fee_clearance": {
+      "points": 0.15,
+      "description": "Checked fee clearance using check_fee_clearance"
+    },
+    "allocated_correct_room": {
+      "points": 0.20,
+      "description": "Allocated a correct room via transfer_hostel"
+    },
+    "updated_student_record": {
+      "points": 0.10,
+      "description": "Student record updated with hostel_id (automatic via transfer_hostel)"
+    },
+    "called_submit": {
+      "points": 0.15,
+      "description": "Called submit_final_response"
+    }
+  },
+  "penalties": {
+    "wrong_gender_block": -0.20,
+    "full_room": -0.15
+  },
+  "entity_refs": {
+    "student_id": "STU-201",
+    "available_female_room": "RM-E001"
+  }
+}

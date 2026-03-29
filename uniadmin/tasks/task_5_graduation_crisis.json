@@ -1,0 +1,27 @@
+{
+  "task_id": "task_5_graduation_crisis",
+  "title": "Graduation Crisis with Dynamic Regulation",
+  "difficulty": "hard",
+  "max_steps": 40,
+  "deadline_step": null,
+  "rubric": {
+    "discovered_missing_credits": {"points": 0.05},
+    "discovered_unpaid_fees": {"points": 0.05},
+    "discovered_prerequisite_gap": {"points": 0.05},
+    "discovered_scholarship_constraint": {"points": 0.05},
+    "discovered_hostel_checkout": {"points": 0.05},
+    "discovered_probation_flag": {"points": 0.05},
+    "used_dynamic_regulation": {"points": 0.10},
+    "processed_fee_payment": {"points": 0.10},
+    "applied_prerequisite_waiver": {"points": 0.10},
+    "resolved_scholarship_compliance": {"points": 0.05},
+    "initiated_hostel_checkout": {"points": 0.05},
+    "cleared_probation": {"points": 0.05},
+    "all_blockers_resolved": {"points": 0.10},
+    "called_submit_with_resolution": {"points": 0.15}
+  },
+  "penalties": {
+    "corrupted_record": -0.20,
+    "incorrect_exception": -0.10
+  }
+}
