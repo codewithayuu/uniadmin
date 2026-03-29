@@ -85,9 +85,10 @@ async def list_tasks():
 
 
 @app.post("/reset")
-async def reset(request: ResetRequest):
+async def reset(request: Optional[ResetRequest] = None):
     try:
-        obs = env.reset(task_id=request.task_id)
+        task_id = request.task_id if request is not None else None
+        obs = env.reset(task_id=task_id)
         obs_dict = obs.model_dump()
         return {"observation": obs_dict}
     except Exception as e:
