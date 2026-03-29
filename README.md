@@ -26,8 +26,8 @@ A fully simulated university administrative operations environment built on the 
 │                  │  POST /reset │  ┌──────────────────────────────┐ │
 │  UniAdminClient  │  POST /step  │  │  UniAdminEnvironment          │ │
 │                  │  GET /state  │  │                                │ │
-└─────────────────┘  GET /tasks  │  │  Entity Graph (~4,000)        │ │
-                     GET /grader  │  │  21 Tool Handlers              │ │
+└─────────────────┘  GET /tasks  │  │  Entity Graph (~1,800)        │ │
+                     GET /grader  │  │  26 Tool Handlers              │ │
                      GET /health  │  │  6 Rubric Graders              │ │
                                   │  │  Audit Log + Notifications     │ │
                                   │  └──────────────────────────────┘ │
@@ -52,38 +52,38 @@ This creates a rich, realistic environment where an agent must plan, discover, v
 
 ---
 
-## 📊 Entity Graph (~4,000 Entities, 14 Types)
+## 📊 Entity Graph (~1,800 Entities, 14 Types)
 
 | Entity Type | Count | Key Fields |
 |---|---|---|
-| Students | 400 | student_id, name, department, semester, cgpa, academic_status |
-| Courses | 120 | course_id, name, credits, prerequisites, capacity, enrollment |
+| Students | 180 | student_id, name, department, semester, cgpa, academic_status |
+| Courses | 100 | course_id, name, credits, prerequisites, capacity, enrollment |
 | Faculty | 60 | faculty_id, name, department, courses_teaching |
 | Departments | 12 | dept_id, name, head_of_dept, courses_offered |
-| Enrollments | ~2000 | enrollment_id, student_id, course_id, grade, status |
+| Enrollments | 701 | enrollment_id, student_id, course_id, grade, status |
 | Hostel Blocks | 8 | block_id, capacity, gender_restriction |
-| Hostel Rooms | ~400 | room_id, block_id, capacity, current_occupants |
-| Fee Records | 400 | student_id, amount_due, amount_paid, status |
+| Hostel Rooms | 300 | room_id, block_id, capacity, current_occupants |
+| Fee Records | 180 | student_id, amount_due, amount_paid, status |
 | Scholarships | 30 | scholarship_id, criteria, min_cgpa, beneficiaries |
-| Exam Schedule | ~200 | exam_id, course_id, date, time_slot, room |
+| Exam Schedule | 200 | exam_id, course_id, date, time_slot, room |
 | Regulations | 25 | reg_id, title, conditions |
 | Exceptions | 15 | exception_id, type, approval_rules |
 | Notifications | 10 | notification_id, trigger_condition |
 | Audit Log | 0→∞ | grows during episode |
 
-**Total: ~3,700 entities** — every entity is reachable from at least one task.
+**Total: ~1,800 entities** — every entity is reachable from at least one task.
 
 ---
 
-## 🔧 Tool Catalog (21 Tools)
+## 🔧 Tool Catalog (26 Tools)
 
 | # | Category | Tool | Mutates State |
 |---|---|---|---|
 | 1-5 | **Search** | search_students, search_courses, search_faculty, search_regulations, search_scholarships | No |
 | 6-11 | **Retrieve** | get_student_record, get_course_details, get_enrollment_history, get_fee_status, get_hostel_details, get_exam_schedule | No |
 | 12-16 | **Validate** | check_prerequisites, check_credit_limits, check_seat_availability, check_fee_clearance, check_scholarship_compliance | No |
-| 17-20 | **Modify** | enroll_student, drop_course, transfer_hostel, update_fee_record | **Yes** |
-| 21 | **Special** | submit_final_response (terminal action) | No |
+| 17-25 | **Modify / Resolve** | enroll_student, drop_course, transfer_hostel, update_fee_record, initiate_hostel_checkout, clear_probation_hold, find_exam_alternatives, check_reschedule_impact, reschedule_exam | Mixed |
+| 26 | **Special** | submit_final_response (terminal action) | No |
 
 ---
 
@@ -102,7 +102,7 @@ This creates a rich, realistic environment where an agent must plan, discover, v
 
 ## 🔬 Worked Example: Task 5 — The "Mic Drop"
 
-**Scenario:** Final-semester student "Karthik" (STU-042) requests a graduation eligibility check. He *appears* fine on the surface.
+**Scenario:** Final-semester student "Karthik" requests a graduation eligibility check. He *appears* fine on the surface.
 
 **What the agent must discover through investigation:**
 
@@ -193,7 +193,7 @@ env.close()
 ```
 uniadmin/
 ├── __init__.py              # Package exports
-├── models.py                # Pydantic Action/Observation/State + 21 tool schemas
+├── models.py                # Pydantic Action/Observation/State + 26 tool schemas
 ├── client.py                # HTTP client for the environment
 ├── world/
 │   ├── generator.py         # Deterministic entity graph generator (seed=42)
@@ -206,7 +206,7 @@ uniadmin/
 │   ├── dispatcher.py        # Routes task_id → grader function
 │   └── grader_task_[1-6].py # Deterministic rubric graders
 ├── server/
-│   ├── uniadmin_environment.py  # Core environment (21 tools)
+│   ├── uniadmin_environment.py  # Core environment (26 tools)
 │   └── app.py               # FastAPI HTTP server
 ├── tests/                   # Test suite
 ├── openenv.yaml             # OpenEnv manifest
