@@ -156,6 +156,11 @@ export API_BASE_URL="https://api.openai.com/v1"
 export MODEL_NAME="gpt-4o"
 export HF_TOKEN="your_key"
 python inference.py
+
+# Without credentials, the runner automatically falls back to mock mode
+# so validation can still complete without crashing.
+unset HF_TOKEN OPENAI_API_KEY
+python inference.py
 ```
 
 ### Validate

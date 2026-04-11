@@ -55,6 +55,19 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def resolve_agent_mode(requested_agent: str) -> Tuple[str, Optional[str]]:
+    if requested_agent == "mock":
+        return "mock", None
+
+    api_key = os.environ.get("HF_TOKEN") or os.environ.get("OPENAI_API_KEY")
+    if api_key:
+        return "llm", None
+
+    return "mock", (
+        "No HF_TOKEN or OPENAI_API_KEY detected; falling back to mock mode for submission-safe inference."
+    )
+
+
 def parse_model_action(response_text: str) -> Tuple[str, Dict[str, Any]]:
     text = response_text.strip()
     try:
@@ -119,14 +132,10 @@ def boot_local_server() -> Tuple[str, subprocess.Popen[bytes]]:
 
 
 def build_openai_client() -> OpenAI:
-    missing = [name for name in ("API_BASE_URL", "MODEL_NAME") if not os.environ.get(name)]
     api_key = os.environ.get("HF_TOKEN") or os.environ.get("OPENAI_API_KEY")
     if not api_key:
-        missing.append("HF_TOKEN or OPENAI_API_KEY")
-    if missing:
         raise RuntimeError(
-            "Set API_BASE_URL, MODEL_NAME, and either HF_TOKEN or OPENAI_API_KEY before running LLM inference. "
-            f"Missing: {', '.join(missing)}"
+            "Set either HF_TOKEN or OPENAI_API_KEY before running LLM inference."
         )
     return OpenAI(base_url=API_BASE_URL, api_key=api_key)
 
@@ -339,54 +348,92 @@ def run_task_with_llm(env: UniAdminClient, model_client: OpenAI, task_id: str) -
     return {"task_id": task_id, "difficulty": TASK_CONFIGS[task_id]["difficulty"], "score": grader.get("score", 0.0), "steps": steps, "grader_result": grader}
 
 
+def write_results(
+    *,
+    requested_agent: str,
+    effective_agent: str,
+    base_url: str,
+    elapsed: float,
+    results: List[Dict[str, Any]],
+    warning: Optional[str] = None,
+    error: Optional[str] = None,
+) -> None:
+    average_score = sum(result["score"] for result in results) / len(results) if results else 0.0
+    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
+    payload: Dict[str, Any] = {
+        "requested_agent_mode": requested_agent,
+        "agent_mode": effective_agent,
+        "model": MODEL_NAME if effective_agent == "llm" else "mock",
+        "api_base": API_BASE_URL if effective_agent == "llm" else "",
+        "environment_base_url": base_url,
+        "average_score": average_score,
+        "total_time_seconds": elapsed,
+        "results": results,
+    }
+    if warning:
+        payload["warning"] = warning
+    if error:
+        payload["error"] = error
+
+    with OUTPUT_PATH.open("w", encoding="utf-8") as handle:
+        json.dump(payload, handle, indent=2, default=str)
+
+
 def main() -> None:
     args = parse_args()
     server_process: Optional[subprocess.Popen[bytes]] = None
+    env: Optional[UniAdminClient] = None
     base_url = args.env_base_url
-
-    if not base_url:
-        base_url, server_process = boot_local_server()
-
-    env = UniAdminClient(base_url=base_url, timeout=60.0)
-    model_client = build_openai_client() if args.agent == "llm" else None
-
+    requested_agent = args.agent
+    effective_agent, warning = resolve_agent_mode(requested_agent)
     results: List[Dict[str, Any]] = []
     start = time.time()
+    fatal_error: Optional[str] = None
 
     try:
+        if warning:
+            print(f"WARNING: {warning}", file=sys.stderr)
+
+        if not base_url:
+            base_url, server_process = boot_local_server()
+
+        env = UniAdminClient(base_url=base_url, timeout=60.0)
+        model_client = build_openai_client() if effective_agent == "llm" else None
+
         for task_id in TASK_CONFIGS:
-            if args.agent == "mock":
+            if effective_agent == "mock":
                 result = run_task_with_mock(env, task_id)
             else:
                 assert model_client is not None
                 result = run_task_with_llm(env, model_client, task_id)
             results.append(result)
             print(f"{task_id}: score={result['score']:.3f} steps={result['steps']}")
+    except Exception as exc:  # noqa: BLE001
+        fatal_error = str(exc)
+        print(f"ERROR: {fatal_error}", file=sys.stderr)
     finally:
-        env.close()
+        if env is not None:
+            env.close()
         if server_process is not None:
             server_process.terminate()
-            server_process.wait(timeout=10)
+            try:
+                server_process.wait(timeout=10)
+            except subprocess.TimeoutExpired:
+                server_process.kill()
+                server_process.wait(timeout=5)
 
-    elapsed = time.time() - start
-    average_score = sum(result["score"] for result in results) / len(results) if results else 0.0
-    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    with OUTPUT_PATH.open("w", encoding="utf-8") as handle:
-        json.dump(
-            {
-                "agent_mode": args.agent,
-                "model": MODEL_NAME if args.agent == "llm" else "mock",
-                "api_base": API_BASE_URL if args.agent == "llm" else "",
-                "environment_base_url": base_url,
-                "average_score": average_score,
-                "total_time_seconds": elapsed,
-                "results": results,
-            },
-            handle,
-            indent=2,
-            default=str,
+        elapsed = time.time() - start
+        write_results(
+            requested_agent=requested_agent,
+            effective_agent=effective_agent,
+            base_url=base_url,
+            elapsed=elapsed,
+            results=results,
+            warning=warning,
+            error=fatal_error,
         )
 
+    average_score = sum(result["score"] for result in results) / len(results) if results else 0.0
     print(f"Average score: {average_score:.3f}")
     print(f"Results written to: {OUTPUT_PATH}")
 
