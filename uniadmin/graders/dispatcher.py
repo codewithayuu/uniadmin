@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
+from uniadmin.graders.base_grader import MIN_INTERIOR_SCORE
 from uniadmin.graders.grader_task_1 import grade_task_1
 from uniadmin.graders.grader_task_2 import grade_task_2
 from uniadmin.graders.grader_task_3 import grade_task_3
@@ -28,7 +29,7 @@ def _stub_grader(
     final_response: Optional[Dict[str, Any]],
 ) -> Dict[str, Any]:
     return {
-        "score": 0.0,
+        "score": MIN_INTERIOR_SCORE,
         "raw_score": 0.0,
         "total_penalties": 0.0,
         "breakdown": {},

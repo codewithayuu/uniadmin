@@ -4,6 +4,13 @@ import hashlib
 import json
 from typing import Any, Callable, Dict, List, Optional, Set, Tuple
 
+MIN_INTERIOR_SCORE = 0.01
+MAX_INTERIOR_SCORE = 0.99
+
+
+def normalize_score(score: float) -> float:
+    return max(MIN_INTERIOR_SCORE, min(MAX_INTERIOR_SCORE, score))
+
 
 def tool_was_called(
     audit_log: List[Dict[str, Any]],
@@ -101,7 +108,7 @@ def compute_rubric_score(
         total_penalties += pvalue
         penalty_details.append({"name": pname, "value": pvalue})
 
-    final_score = max(0.0, min(1.0, raw_score + total_penalties))
+    final_score = normalize_score(raw_score + total_penalties)
 
     return {
         "score": final_score,
